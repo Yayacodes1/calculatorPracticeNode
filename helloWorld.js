@@ -24,32 +24,42 @@ function division(x,y){
 const operation = process.argv[2];
 const x = Number(process.argv[3]);
 const y = Number(process.argv[4]);
-
+const city = process.argv[3];
 // 10IAP27BURGLN93Z
 
+const fetch = require('node-fetch');
 
 
 if (operation === "add") addtion(x, y);
 if (operation === "sub") subtraction(x, y);
 if (operation === "mul") multiply(x, y);
 if (operation === "div") division(x, y);
-
-const fetch = require('node-fetch');
-
+if (operation === "weather") getWeather(city);
 
 
-async function getGoldPrice() {
-    const apiKey = '10IAP27BURGLN93Z'; // Your API key
-    const url = `https://metals-api.com/api/latest?access_key=${apiKey}&base=USD&symbols=XAU`;
+
+
+
+
+async function getWeather(city) {
+    //step 1: get the api key
+   
+    const apiKey = '3125d30ff728489a940195143250708'; // Your API key
+    //step 2: get the url
+    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+    //step 3: fetch the data    
     const response = await fetch(url);
+    //step 4: parse the data    
     const data = await response.json();
-    if (data.success && data.rates && data.rates.XAU) {
-        console.log(`Gold price: 1 XAU = ${1 / data.rates.XAU} USD`);
+    //step 5: check if the data is valid
+    
+    if(data.current) {
+        console.log(data.current);
     } else {
-        console.log('Could not fetch gold price:', data.error ? data.error.info : data);
+        console.log("Could not fetch weather data:", data.error ? data.error.message : data);
     }
 }
 
 // To call the function:
-getGoldPrice();
+
 
